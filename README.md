@@ -3,55 +3,27 @@ EPS_Covid19
 
 Applied Data Science on COVID-19 data
 
-Project Organization
-------------
+Project Description
+-------------------
 
-    ├── LICENSE
-    ├── Makefile           <- Makefile with commands like `make data` or `make train`
-    ├── README.md          <- The top-level README for developers using this project.
-    ├── data
-    │   ├── external       <- Data from third party sources.
-    │   ├── interim        <- Intermediate data that has been transformed.
-    │   ├── processed      <- The final, canonical data sets for modeling.
-    │   └── raw            <- The original, immutable data dump.
-    │
-    ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
-    │
-    ├── models             <- Trained and serialized models, model predictions, or model summaries
-    │
-    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
-    │
-    ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-    │
-    ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-    │   └── figures        <- Generated graphics and figures to be used in reporting
-    │
-    ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-    │                         generated with `pip freeze > requirements.txt`
-    │
-    ├── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
-    ├── src                <- Source code for use in this project.
-    │   ├── __init__.py    <- Makes src a Python module
-    │   │
-    │   ├── data           <- Scripts to download or generate data
-    │   │   └── make_dataset.py
-    │   │
-    │   ├── features       <- Scripts to turn raw data into features for modeling
-    │   │   └── build_features.py
-    │   │
-    │   ├── models         <- Scripts to train models and then use trained models to make
-    │   │   │                 predictions
-    │   │   ├── predict_model.py
-    │   │   └── train_model.py
-    │   │
-    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
-    │       └── visualize.py
-    │
-    └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
-
-
---------
-
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+    The project involves the following goals:
+    
+    1.  Building a COVID-19 confirmed cases dashboard following CRISP-DM process.
+    
+    2.  Data Understanding and collection through Web Scraping, REST API calls and also pulling data from GitHub.
+    
+    3.  Data Processing using libraries from pandas and numpy and checking the data structure on small data.
+    
+    4.  Building a model of on the small data-set, to get the feel of the final product. Creating the dashboard to know how the end product should look like.
+    
+    5.  Data preparation for the whole data.
+    
+    6.  Calculation of Doubling Rate. Calculation of filtered values for both Confirmed cases and Doubling Rate.
+    
+    7.  Forcasting of the cases using Facebook prophet.
+    
+    8.  Using the processed data to build a SIR model.
+    
+    9.  Bringing in world population data, country-wise to build SIR data.
+    
+    10. Building a dashboard which can plot confirmed cases, doubling rate, their filtered values and SIR curves.
