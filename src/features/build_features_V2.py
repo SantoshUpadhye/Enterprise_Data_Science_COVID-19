@@ -5,6 +5,9 @@ import pandas as pd
 
 from scipy import signal
 
+from scipy import optimize
+from scipy import integrate
+
 
 def get_doubling_time_via_regression(in_array):
     ''' Use a linear regression to approximate the doubling rate
@@ -135,6 +138,88 @@ def calc_doubling_rate(df_input,filter_on='confirmed'):
     return df_output
 
 
+def SIR_model_and_fitting_parameters():
+    df_analyse = pd.read_csv('C:/ProgramData/Anaconda3/eps_covid19/data/processed/all_country_flat_table.csv',sep=';',parse_dates=[0])
+
+    population_df = pd.read_csv('C:/ProgramData/Anaconda3/eps_covid19/data/raw/population_data.csv',sep=';', thousands=',')
+    population_df = population_df.set_index(['country']).T
+
+
+    ydata = []
+
+    for column in df_analyse.columns:
+        ydata.append(np.array(df_analyse[column][75:]))
+
+    ydata_df = pd.DataFrame(ydata,index=df_analyse.columns).T
+    ydata_df.to_csv('C:/ProgramData/Anaconda3/eps_covid19/data/processed/SIR/ydata_SIR_data.csv',sep=';',index=False)
+    print('Number of rows in ydata_df: '+str(ydata_df.shape[0]))
+
+    optimized_df = pd.DataFrame(columns = df_analyse.columns[1:],
+                     index = ['opt_beta', 'opt_gamma', 'std_dev_error_beta', 'std_dev_error_gamma'])
+
+    t = []
+    fitted_final_data = []
+    global I0, N0, S0, R0
+    for column in ydata_df.columns[1:]:                        # 0th column is date, which should not be considered
+        I0 = ydata_df[column].loc[0]                           # initialising I0 with first value of ydata_df dataframe for a country
+        N0 = population_df[column].loc['population']           # initialising N0 with population of the country_list
+        S0 = N0-I0                                             # calculating susceptible population = total population - infected population
+        R0 = 0                                                 # initialising recovered to zero
+        t  = np.arange(len(ydata_df[column]))                  # calculating number of days in arange format
+        popt=[0.4,0.1]                                         # initialising beta and gamma
+
+        fit_odeint(t, *popt)                                   # fitting SIR data to use it for getting optimize beta and gamma
+
+        popt, pcov = optimize.curve_fit(fit_odeint, t, ydata_df[column], maxfev=5000)   # optimising beta and gamma
+        perr = np.sqrt(np.diag(pcov))                   # variance and standard deviation
+
+        optimized_df.at['opt_beta', column] = popt[0]
+        optimized_df.at['opt_gamma', column] = popt[1]
+        optimized_df.at['std_dev_error_beta', column] = perr[0]
+        optimized_df.at['std_dev_error_gamma', column] = perr[1]
+
+        fitted = fit_odeint(t, *popt)                   # calculating fitted curve for a country
+        fitted_final_data.append(np.array(fitted))      # appending calculated values to a list
+
+
+    fitted_SIR_data_df = pd.DataFrame(fitted_final_data,index=df_analyse.columns[1:]).T
+
+    optimized_df.to_csv('C:/ProgramData/Anaconda3/eps_covid19/data/processed/SIR/optimized_SIR_data.csv',sep=';',index=False)
+    print('Number of rows in optimized dataframe: '+str(optimized_df.shape[0]))
+
+    fitted_SIR_data_df.to_csv('C:/ProgramData/Anaconda3/eps_covid19/data/processed/SIR/fitted_SIR_data.csv',sep=';',index=False)
+    print('Number of rows in fitted_SIR_data: '+str(ydata_df.shape[0]))
+
+
+
+def SIR_model_t(SIRN,t,beta,gamma):
+    ''' Simple SIR model
+        S: susceptible population
+        t: time step, mandatory for integral.odeint
+        I: infected people
+        R: recovered people
+        beta:
+
+        overall condition is that the sum of changes (differnces) sum up to 0
+        dS+dI+dR=0
+        S+I+R= N (constant size of population)
+
+    '''
+
+    S,I,R,N=SIRN
+    dS_dt=-beta*S*I/N          #S*I is the
+    dI_dt=beta*S*I/N-gamma*I
+    dR_dt=gamma*I
+    dN_dt=0
+    return dS_dt,dI_dt,dR_dt,dN_dt
+
+
+def fit_odeint(t, beta, gamma): #t==x?
+    '''
+    helper function for the integration
+    '''
+    return integrate.odeint(SIR_model_t, (S0, I0, R0, N0), t, args=(beta, gamma))[:,1] # we only would like to get dI
+
 
 if __name__ == '__main__':
     test_data_reg=np.array([2,4,6])
@@ -156,3 +241,5 @@ if __name__ == '__main__':
     pd_result_larg['confirmed_filtered_DR']=pd_result_larg['confirmed_filtered_DR'].where(mask, other=np.NaN)
     pd_result_larg.to_csv('C:/ProgramData/Anaconda3/eps_covid19/data/processed/COVID_final_set.csv',sep=';',index=False)
     print(pd_result_larg[pd_result_larg['country']=='Germany'].tail())
+
+    SIR_model_and_fitting_parameters()
