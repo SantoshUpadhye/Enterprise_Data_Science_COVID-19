@@ -12,15 +12,15 @@ Project Description
     
     2.  Data Understanding and collection through Web Scraping, REST API calls and also pulling data from GitHub.
     
-    3.  Data Processing using libraries from pandas and numpy and checking the data structure on small data.
+    3.  Data Processing using libraries like pandas and numpy and checking the data structure on small data.
     
-    4.  Building a model of on the small data-set, to get the feel of the final product. Creating the dashboard to know how the end product should look like.
+    4.  Building a model on the small data-set, to get the feel of the final product. Creating the dashboard to know how the end product should look like.
     
-    5.  Data preparation for the whole data.
+    5.  Complete processed data-set preparation.
     
-    6.  Calculation of Doubling Rate. Calculation of filtered values for both Confirmed cases and Doubling Rate.
+    6.  Calculation of Doubling Rate. Calculation of filtered values for Confirmed cases and Doubling Rate.
     
-    7.  Forcasting of the cases using Facebook prophet.
+    7.  Forecasting of the cases using Facebook prophet.
     
     8.  Using the processed data to build a SIR model.
     
